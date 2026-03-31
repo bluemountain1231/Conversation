@@ -1,0 +1,37 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/circles/circles",
+    "pages/notifications/notifications",
+    "pages/profile/profile",
+    "pages/login/login",
+    "pages/post-detail/post-detail",
+    "pages/post-create/post-create",
+    "pages/circle-detail/circle-detail",
+    "pages/search/search",
+    "pages/favorites/favorites",
+    "pages/profile-edit/profile-edit",
+    "pages/user-profile/user-profile"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#f9f9fe",
+    "navigationBarTitleText": "兴趣圈子",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f9f9fe",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#999999",
+    "selectedColor": "#4F46E5",
+    "backgroundColor": "#ffffff",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/circles/circles", "text": "发现" },
+      { "pagePath": "pages/notifications/notifications", "text": "消息" },
+      { "pagePath": "pages/profile/profile", "text": "我的" }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

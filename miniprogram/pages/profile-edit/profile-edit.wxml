@@ -1,0 +1,41 @@
+<view class="container">
+  <!-- Avatar -->
+  <view class="avatar-section" bindtap="onAvatarTap">
+    <image wx:if="{{avatar}}" class="avatar avatar-lg" src="{{avatarUrl || avatar}}" mode="aspectFill" />
+    <view wx:else class="avatar avatar-lg avatar-placeholder">{{username ? username[0] : '+'}}</view>
+    <text class="avatar-hint">更换头像</text>
+  </view>
+
+  <!-- Form -->
+  <view class="form-section">
+    <view class="input-label">用户名</view>
+    <view class="input-wrap">
+      <input
+        placeholder="请输入用户名"
+        value="{{username}}"
+        bindinput="onUsernameInput"
+        maxlength="20"
+      />
+    </view>
+
+    <view class="input-label">个人简介</view>
+    <view class="input-wrap">
+      <textarea
+        placeholder="介绍一下自己吧"
+        value="{{bio}}"
+        bindinput="onBioInput"
+        maxlength="200"
+        auto-height
+      />
+    </view>
+  </view>
+
+  <!-- Save button -->
+  <view class="save-wrap">
+    <button
+      class="btn btn-primary btn-block"
+      bindtap="onSave"
+      disabled="{{saving}}"
+    >{{saving ? '保存中...' : '保存'}}</button>
+  </view>
+</view>

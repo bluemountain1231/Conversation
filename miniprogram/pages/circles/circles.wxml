@@ -1,0 +1,63 @@
+<view class="page-discover">
+  <!-- Header -->
+  <view class="discover-header">
+    <text class="discover-label">探索</text>
+    <text class="discover-title">发现圈子</text>
+  </view>
+
+  <!-- Search -->
+  <view class="discover-search" bindtap="onSearch">
+    <view class="ds-box">
+      <text class="ds-icon">🔍</text>
+      <text class="ds-hint">找到你的圈子...</text>
+    </view>
+  </view>
+
+  <!-- Popular Categories -->
+  <view class="section">
+    <view class="section-head">
+      <text class="section-title">热门分类</text>
+      <text class="section-link" bindtap="onViewAllCategories">查看全部</text>
+    </view>
+    <scroll-view scroll-x class="cate-scroll" enhanced show-scrollbar="{{false}}">
+      <view class="cate-inner">
+        <view
+          wx:for="{{categories}}"
+          wx:key="name"
+          class="cate-card"
+          style="background: {{item.bg}}"
+          data-name="{{item.name}}"
+          bindtap="onCategoryTap"
+        >
+          <text class="cate-emoji">{{item.icon}}</text>
+          <text class="cate-name">{{item.name}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- Recommended Circles -->
+  <view class="section">
+    <text class="section-title" style="padding: 0 32rpx;">为你推荐</text>
+    <view class="circle-list">
+      <circle-card
+        wx:for="{{circles}}"
+        wx:key="id"
+        circle="{{item}}"
+        bind:tap="onCircleTap"
+        bind:join="onJoinCircle"
+      />
+    </view>
+
+    <view wx:if="{{loading}}" class="loading-more">
+      <view class="dot-loader">
+        <view></view><view></view><view></view>
+      </view>
+    </view>
+    <view wx:if="{{!hasMore && circles.length}}" class="loading-end">没有更多了</view>
+    <view wx:if="{{!loading && !circles.length}}" class="empty-state">
+      <text class="empty-icon">🔮</text>
+      <text class="empty-text">暂无推荐圈子</text>
+    </view>
+  </view>
+</view>

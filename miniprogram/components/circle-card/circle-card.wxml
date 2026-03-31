@@ -1,0 +1,20 @@
+<view class="circle-card" bindtap="onTap">
+  <view class="cc-top">
+    <image wx:if="{{avatarUrl}}" class="cc-avatar" src="{{avatarUrl}}" mode="aspectFill" />
+    <view wx:else class="cc-avatar cc-avatar-ph">{{circle.name[0] || '◎'}}</view>
+    <view class="cc-info">
+      <view class="cc-name-row">
+        <text class="cc-name">{{circle.name}}</text>
+      </view>
+      <view class="cc-meta-row">
+        <view wx:if="{{badgeText}}" class="cc-badge cc-badge-{{badgeType}}">{{badgeText}}</view>
+        <text class="cc-members">{{memberText}}</text>
+      </view>
+    </view>
+    <view class="cc-action">
+      <view wx:if="{{circle.joined}}" class="cc-join-btn cc-joined">已加入</view>
+      <view wx:else class="cc-join-btn" catchtap="onJoin">加入</view>
+    </view>
+  </view>
+  <view wx:if="{{circle.description}}" class="cc-desc">{{circle.description}}</view>
+</view>

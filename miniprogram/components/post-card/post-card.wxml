@@ -1,0 +1,67 @@
+<view class="post-card" bindtap="onTap">
+  <!-- Header -->
+  <view class="pc-header">
+    <image class="pc-avatar" src="{{avatarUrl}}" mode="aspectFill" catchtap="onAuthorTap" />
+    <view class="pc-author-info">
+      <view class="pc-name-row">
+        <text class="pc-name">{{post.authorName || '用户'}}</text>
+        <view wx:if="{{isPopular}}" class="pc-popular-badge">热门</view>
+      </view>
+      <view class="pc-meta-row">
+        <text class="pc-time">{{timeText}}</text>
+        <text wx:if="{{post.circleName}}" class="pc-circle-dot">•</text>
+        <text wx:if="{{post.circleName}}" class="pc-circle-name">{{post.circleName}}</text>
+      </view>
+    </view>
+    <view class="pc-more" catchtap="onMore">⋯</view>
+  </view>
+
+  <!-- Content -->
+  <view wx:if="{{contentPreview}}" class="pc-content">{{contentPreview}}</view>
+
+  <!-- Single image -->
+  <view wx:if="{{displayImages.length === 1}}" class="pc-single-img">
+    <image
+      src="{{displayImages[0]}}"
+      mode="widthFix"
+      catchtap="previewImage"
+      data-src="{{displayImages[0]}}"
+    />
+  </view>
+
+  <!-- Multiple images grid -->
+  <view wx:elif="{{displayImages.length >= 2}}" class="pc-img-grid pc-cols-{{displayImages.length >= 3 ? 3 : 2}}">
+    <view
+      wx:for="{{displayImages}}"
+      wx:if="{{index < 3}}"
+      wx:key="index"
+      class="pc-grid-item"
+      catchtap="previewImage"
+      data-src="{{item}}"
+    >
+      <image src="{{item}}" mode="aspectFill" lazy-load />
+      <view wx:if="{{index === 2 && displayImages.length > 3}}" class="pc-grid-more">
+        +{{displayImages.length - 3}}
+      </view>
+    </view>
+  </view>
+
+  <!-- Actions -->
+  <view class="pc-actions">
+    <view class="pc-act {{post.liked ? 'pc-act-liked' : ''}}" catchtap="onLike">
+      <text class="pc-act-icon {{likeAnimating ? 'pc-pop' : ''}}">{{post.liked ? '♥' : '♡'}}</text>
+      <text class="pc-act-num">{{post.likeCount || ''}}</text>
+    </view>
+    <view class="pc-act" catchtap="onTap">
+      <text class="pc-act-icon">✎</text>
+      <text class="pc-act-num">{{post.commentCount || ''}}</text>
+    </view>
+    <view class="pc-act" catchtap="onShare">
+      <text class="pc-act-icon">⇧</text>
+    </view>
+    <view class="pc-spacer"></view>
+    <view class="pc-act {{post.favorited ? 'pc-act-faved' : ''}}" catchtap="onFavorite">
+      <text class="pc-act-icon {{favAnimating ? 'pc-pop' : ''}}">{{post.favorited ? '★' : '☆'}}</text>
+    </view>
+  </view>
+</view>

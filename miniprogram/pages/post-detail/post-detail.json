@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "帖子详情",
+  "usingComponents": {
+    "comment-item": "/components/comment-item/comment-item"
+  }
+}

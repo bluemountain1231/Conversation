@@ -1,0 +1,93 @@
+<view class="page-circle-detail">
+  <!-- Loading -->
+  <view wx:if="{{circleLoading && !circle}}" class="empty">
+    <text class="empty-icon">⏳</text>
+    <text class="empty-text">加载中...</text>
+  </view>
+
+  <!-- Error -->
+  <view wx:elif="{{error && !circle}}" class="empty">
+    <text class="empty-icon">⚠️</text>
+    <text class="empty-text">加载失败，下拉刷新重试</text>
+  </view>
+
+  <block wx:elif="{{circle}}">
+    <!-- Circle header -->
+    <view class="circle-header card">
+      <view class="header-top flex items-start">
+        <view class="circle-avatar-wrap">
+          <image wx:if="{{circle.avatarUrl}}" class="circle-avatar" src="{{circle.avatarUrl}}" mode="aspectFill" />
+          <view wx:else class="circle-avatar avatar-placeholder">{{circle.name ? circle.name[0] : '◎'}}</view>
+        </view>
+        <view class="header-info flex-1">
+          <text class="circle-name text-bold text-xl">{{circle.name}}</text>
+          <text wx:if="{{circle.description}}" class="circle-desc text-secondary">{{circle.description}}</text>
+          <text wx:if="{{circle.creatorName}}" class="creator-label text-light text-sm mt-sm">创建者：{{circle.creatorName}}</text>
+        </view>
+      </view>
+
+      <!-- Stats -->
+      <view class="stats-row flex items-center mt-md">
+        <view class="stat-badge">
+          <text class="stat-num">{{circle.memberCountText}}</text>
+          <text class="stat-label">成员</text>
+        </view>
+        <view class="stat-badge">
+          <text class="stat-num">{{circle.postCountText}}</text>
+          <text class="stat-label">帖子</text>
+        </view>
+      </view>
+
+      <!-- Join / Leave -->
+      <view class="join-btn-wrap mt-lg">
+        <button wx:if="{{circle.joined}}" class="btn btn-leave btn-block" bindtap="onJoinToggle" disabled="{{joinLoading}}">
+          {{joinLoading ? '处理中...' : '已加入'}}
+        </button>
+        <button wx:else class="btn btn-primary btn-block" bindtap="onJoinToggle" disabled="{{joinLoading}}">
+          {{joinLoading ? '处理中...' : '加入圈子'}}
+        </button>
+      </view>
+    </view>
+
+    <!-- Members preview -->
+    <view class="members-section card">
+      <view class="section-header flex items-center justify-between">
+        <text class="section-title">圈子成员</text>
+        <text class="member-total text-light text-sm">共{{circle.memberCount || 0}}人</text>
+      </view>
+      <view wx:if="{{members.length > 0}}" class="members-row flex items-center">
+        <block wx:for="{{members}}" wx:key="userId">
+          <view class="member-item" data-member="{{item}}" bindtap="onMemberTap">
+            <image wx:if="{{item.avatarUrl}}" class="member-avatar" src="{{item.avatarUrl}}" mode="aspectFill" />
+            <view wx:else class="member-avatar avatar-placeholder">{{item.username ? item.username[0] : '?'}}</view>
+            <text class="member-name ellipsis">{{item.username || item.name || ''}}</text>
+          </view>
+        </block>
+      </view>
+      <view wx:else class="text-light text-sm" style="padding:16rpx 0;">暂无成员</view>
+    </view>
+
+    <view class="divider"></view>
+
+    <!-- Posts -->
+    <view class="posts-section">
+      <view class="section-header flex items-center justify-between">
+        <text class="section-title">圈子动态</text>
+        <text class="text-light text-sm">{{circle.postCount || 0}}条动态</text>
+      </view>
+
+      <view wx:if="{{posts.length === 0 && !loading}}" class="empty">
+        <text class="empty-icon">📝</text>
+        <text class="empty-text">暂无帖子，快来发第一条吧</text>
+      </view>
+
+      <block wx:else>
+        <block wx:for="{{posts}}" wx:key="id">
+          <post-card post="{{item}}" bind:tap="onPostTap" bind:like="onLike" bind:favorite="onFavorite" />
+        </block>
+        <view wx:if="{{loading}}" class="loading-more">加载中...</view>
+        <view wx:elif="{{!hasMore && posts.length > 0}}" class="loading-more">没有更多了</view>
+      </block>
+    </view>
+  </block>
+</view>

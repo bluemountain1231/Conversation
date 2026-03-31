@@ -1,0 +1,163 @@
+<view class="page-profile">
+  <!-- Not logged in -->
+  <view wx:if="{{!loggedIn}}" class="login-prompt">
+    <view class="login-illustration">
+      <text class="ill-icon">👤</text>
+      <text class="ill-title">发现志同道合的人</text>
+      <text class="ill-sub">登录后查看个人主页、发帖与互动</text>
+    </view>
+    <button class="btn btn-primary btn-pill btn-block mt-lg" bindtap="onLogin">登录 / 注册</button>
+  </view>
+
+  <block wx:else>
+    <!-- Profile header -->
+    <view class="profile-header">
+      <view class="ph-top">
+        <view class="ph-avatar-wrap">
+          <image wx:if="{{user.avatarUrl || user.avatar}}" class="ph-avatar" src="{{user.avatarUrl}}" mode="aspectFill" />
+          <view wx:else class="ph-avatar ph-avatar-ph">{{user.username ? user.username[0] : '?'}}</view>
+        </view>
+        <view class="ph-info">
+          <text class="ph-name">{{user.username || '用户'}}</text>
+          <text class="ph-handle">@{{user.username || 'user'}}</text>
+        </view>
+        <view class="ph-edit-btn" bindtap="onEditProfile">编辑资料</view>
+      </view>
+
+      <view wx:if="{{user.bio}}" class="ph-bio">{{user.bio}}</view>
+
+      <!-- Stats -->
+      <view class="ph-stats">
+        <view class="stat-item">
+          <text class="stat-num">{{user.followerCount || 0}}</text>
+          <text class="stat-label">粉丝</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-num">{{user.followingCount || 0}}</text>
+          <text class="stat-label">关注</text>
+        </view>
+        <view class="stat-item">
+          <text class="stat-num">{{user.postCount || 0}}</text>
+          <text class="stat-label">帖子</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Tabs -->
+    <view class="profile-tabs">
+      <view
+        class="pt-item {{activeTab === 0 ? 'pt-active' : ''}}"
+        bindtap="switchTab"
+        data-index="0"
+      >
+        <text>我的帖子</text>
+      </view>
+      <view
+        class="pt-item {{activeTab === 1 ? 'pt-active' : ''}}"
+        bindtap="switchTab"
+        data-index="1"
+      >
+        <text>点赞的</text>
+      </view>
+      <view
+        class="pt-item {{activeTab === 2 ? 'pt-active' : ''}}"
+        bindtap="switchTab"
+        data-index="2"
+      >
+        <text>收藏的</text>
+      </view>
+    </view>
+
+    <!-- Post grid -->
+    <view wx:if="{{activeTab === 0}}" class="post-grid-section">
+      <view wx:if="{{posts.length > 0}}" class="post-grid-2col">
+        <!-- Featured full-width card -->
+        <view wx:if="{{posts[0]}}" class="grid-feature-card" data-id="{{posts[0].id}}" bindtap="onPostTap">
+          <view class="gfc-image-wrap">
+            <image wx:if="{{posts[0]._coverImage}}" class="gfc-image" src="{{posts[0]._coverImage}}" mode="aspectFill" />
+            <view wx:if="{{posts[0].circleName}}" class="gfc-tag">{{posts[0].circleName}}</view>
+          </view>
+          <view class="gfc-info">
+            <text class="gfc-title">{{posts[0].title || ''}}</text>
+            <text class="gfc-desc">{{posts[0]._preview || ''}}</text>
+          </view>
+        </view>
+
+        <!-- Square grid items -->
+        <view
+          wx:for="{{posts}}"
+          wx:if="{{index >= 1}}"
+          wx:key="id"
+          class="grid-square-item"
+          data-id="{{item.id}}"
+          bindtap="onPostTap"
+        >
+          <image wx:if="{{item._coverImage}}" class="gsi-image" src="{{item._coverImage}}" mode="aspectFill" />
+          <view wx:else class="gsi-placeholder"></view>
+          <text class="gsi-title">{{item.title || ''}}</text>
+        </view>
+      </view>
+
+      <view wx:if="{{!postsLoading && posts.length === 0}}" class="empty-state">
+        <text class="empty-text">还没有发布帖子</text>
+      </view>
+      <view wx:if="{{postsLoading}}" class="loading-indicator">加载中...</view>
+    </view>
+
+    <!-- Liked posts tab -->
+    <view wx:if="{{activeTab === 1}}" class="post-grid-section">
+      <view wx:if="{{likedPosts.length > 0}}" class="post-grid-2col">
+        <view
+          wx:for="{{likedPosts}}"
+          wx:key="id"
+          class="grid-square-item"
+          data-id="{{item.id}}"
+          bindtap="onPostTap"
+        >
+          <image wx:if="{{item._coverImage}}" class="gsi-image" src="{{item._coverImage}}" mode="aspectFill" />
+          <view wx:else class="gsi-placeholder"></view>
+          <text class="gsi-title">{{item.title || ''}}</text>
+        </view>
+      </view>
+      <view wx:if="{{!likedLoading && likedPosts.length === 0}}" class="empty-state">
+        <text class="empty-text">暂无点赞帖子</text>
+      </view>
+      <view wx:if="{{likedLoading}}" class="loading-indicator">加载中...</view>
+    </view>
+
+    <!-- Saved posts tab -->
+    <view wx:if="{{activeTab === 2}}" class="post-grid-section">
+      <view wx:if="{{savedPosts.length > 0}}" class="post-grid-2col">
+        <view
+          wx:for="{{savedPosts}}"
+          wx:key="id"
+          class="grid-square-item"
+          data-id="{{item.id}}"
+          bindtap="onPostTap"
+        >
+          <image wx:if="{{item._coverImage}}" class="gsi-image" src="{{item._coverImage}}" mode="aspectFill" />
+          <view wx:else class="gsi-placeholder"></view>
+          <text class="gsi-title">{{item.title || ''}}</text>
+        </view>
+      </view>
+      <view wx:if="{{!savedLoading && savedPosts.length === 0}}" class="empty-state">
+        <text class="empty-text">暂无收藏帖子</text>
+      </view>
+      <view wx:if="{{savedLoading}}" class="loading-indicator">加载中...</view>
+    </view>
+
+    <!-- Menu -->
+    <view class="profile-menu">
+      <view class="pm-item" bindtap="onFavorites">
+        <text class="pm-icon">☆</text>
+        <text class="pm-text">我的收藏</text>
+        <text class="pm-arrow">›</text>
+      </view>
+      <view class="pm-item" bindtap="onLogout">
+        <text class="pm-icon" style="color:#EF4444">⏻</text>
+        <text class="pm-text" style="color:#EF4444">退出登录</text>
+        <text class="pm-arrow">›</text>
+      </view>
+    </view>
+  </block>
+</view>

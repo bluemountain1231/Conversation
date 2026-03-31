@@ -1,0 +1,43 @@
+<view class="container">
+  <!-- Login prompt -->
+  <view wx:if="{{!loggedIn}}" class="empty">
+    <text class="empty-icon">🔐</text>
+    <text class="empty-text">登录后查看消息</text>
+    <button class="btn btn-primary mt-lg" bindtap="onLogin">去登录</button>
+  </view>
+
+  <!-- Logged in content -->
+  <block wx:else>
+    <!-- Mark all read -->
+    <view class="header-row flex justify-between items-center mb-md">
+      <text class="text-secondary text-sm">共 {{notifications.length}} 条消息</text>
+      <view class="btn btn-outline btn-sm" bindtap="markAllRead">全部已读</view>
+    </view>
+
+    <!-- Notification list -->
+    <view wx:if="{{notifications.length > 0}}" class="notif-list">
+      <view
+        wx:for="{{notifications}}"
+        wx:key="id"
+        class="notif-item notif-{{item.type}}"
+        data-item="{{item}}"
+        bindtap="onNotificationTap"
+      >
+        <view class="notif-accent"></view>
+        <view class="notif-icon">{{item.type === 'LIKE' ? '♥' : item.type === 'COMMENT' ? '💬' : item.type === 'FOLLOW' ? '👤' : '✉'}}</view>
+        <view class="notif-body flex-1">
+          <text class="notif-text">{{item.content}}</text>
+          <text class="notif-time text-light text-sm">{{item.createdAt}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Empty state -->
+    <view wx:else class="empty">
+      <text class="empty-icon">✉</text>
+      <text class="empty-text">暂无消息</text>
+    </view>
+
+    <view wx:if="{{loading && notifications.length > 0}}" class="loading-more">加载中...</view>
+  </block>
+</view>

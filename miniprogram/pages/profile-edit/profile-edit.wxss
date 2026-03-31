@@ -1,0 +1,81 @@
+.container { padding: 0; }
+
+.avatar-section {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 48rpx 0;
+  background: #FFF;
+  border-bottom: 12rpx solid #F7F8FA;
+  animation: fadeIn 0.4s ease both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.avatar-section .avatar-placeholder {
+  background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
+  color: #fff; font-size: 44rpx;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 50%;
+}
+
+.avatar-section .avatar-lg {
+  border-radius: 50%;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+}
+
+.avatar-section:active .avatar-lg {
+  transform: scale(0.95);
+}
+
+.avatar-hint {
+  font-size: 24rpx;
+  color: #4F46E5;
+  margin-top: 16rpx;
+  font-weight: 500;
+}
+
+.form-section {
+  background: #FFF;
+  margin-top: 0;
+  animation: fadeInUp 0.4s ease 0.1s both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.form-section .input-label {
+  padding: 24rpx 32rpx 0;
+  font-size: 24rpx;
+  color: #6B7280;
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+.form-section .input-wrap {
+  background: transparent;
+  border-radius: 0;
+  padding: 12rpx 32rpx 24rpx;
+  margin: 0;
+  border-bottom: 1rpx solid #F0F0F0;
+  transition: all 0.3s ease;
+}
+
+.save-wrap {
+  margin-top: 48rpx;
+  padding: 0 32rpx;
+  animation: fadeInUp 0.4s ease 0.2s both;
+}
+
+.save-wrap .btn {
+  height: 92rpx;
+  border-radius: 46rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  box-shadow: 0 8rpx 32rpx rgba(79, 70, 229, 0.35);
+  letter-spacing: 2rpx;
+}

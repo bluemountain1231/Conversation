@@ -1,0 +1,129 @@
+<view class="create-page">
+  <!-- Custom header -->
+  <view class="create-header">
+    <view class="ch-left" bindtap="onClose">
+      <text class="ch-close">✕</text>
+    </view>
+    <text class="ch-title">发布帖子</text>
+    <view
+      class="ch-post-btn {{canSubmit ? '' : 'ch-post-disabled'}}"
+      bindtap="onSubmit"
+    >
+      发布
+    </view>
+  </view>
+
+  <!-- Spacer for fixed header -->
+  <view class="header-spacer"></view>
+
+  <!-- User info + circle selector -->
+  <view class="create-user-row">
+    <image wx:if="{{userAvatar}}" class="cu-avatar" src="{{userAvatar}}" mode="aspectFill" />
+    <view wx:else class="cu-avatar cu-avatar-ph">
+      <text>{{userName[0] || '?'}}</text>
+    </view>
+    <view class="cu-info">
+      <text class="cu-name">{{userName || '用户'}}</text>
+    </view>
+    <picker
+      wx:if="{{circles.length > 0}}"
+      mode="selector"
+      range="{{circles}}"
+      range-key="name"
+      value="{{circleIndex}}"
+      bindchange="onCircleChange"
+    >
+      <view class="cu-circle-picker">
+        <text class="cu-circle-icon">👥</text>
+        <text class="cu-circle-text">{{selectedCircleName || '选择圈子'}}</text>
+        <text class="cu-circle-arrow">▾</text>
+      </view>
+    </picker>
+  </view>
+
+  <!-- Content -->
+  <view class="create-content">
+    <textarea
+      class="create-textarea"
+      placeholder="分享你的想法..."
+      placeholder-class="create-placeholder"
+      value="{{content}}"
+      bindinput="onContentInput"
+      maxlength="5000"
+      auto-height
+      show-confirm-bar="{{false}}"
+    />
+  </view>
+
+  <!-- Images -->
+  <view class="create-images" wx:if="{{images.length > 0}}">
+    <scroll-view scroll-x class="img-scroll" enhanced show-scrollbar="{{false}}">
+      <view class="img-scroll-inner">
+        <view class="img-item" wx:for="{{images}}" wx:key="index">
+          <image class="img-preview" src="{{item.path}}" mode="aspectFill" catchtap="previewImage" data-index="{{index}}" />
+          <view class="img-status" wx:if="{{item.uploading}}">
+            <text class="img-status-text">上传中</text>
+          </view>
+          <view class="img-status img-error" wx:if="{{item.error}}">
+            <text class="img-status-text">失败</text>
+          </view>
+          <view class="img-uploaded" wx:if="{{item.uploaded && !item.uploading}}">
+            <text>✓</text>
+          </view>
+          <view class="img-remove" catchtap="removeImage" data-index="{{index}}">
+            <text>✕</text>
+          </view>
+        </view>
+
+        <view class="img-add" bindtap="chooseImage" wx:if="{{images.length < 9}}">
+          <text class="img-add-icon">📷</text>
+          <text class="img-add-text">添加</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- Toolbar -->
+  <view class="create-toolbar">
+    <view class="tb-item" bindtap="chooseImage">
+      <text class="tb-icon">🖼️</text>
+      <text class="tb-label">照片</text>
+    </view>
+    <view class="tb-item">
+      <text class="tb-icon">🎬</text>
+      <text class="tb-label">视频</text>
+    </view>
+    <view class="tb-item">
+      <text class="tb-icon">📍</text>
+      <text class="tb-label">位置</text>
+    </view>
+    <view class="tb-item">
+      <text class="tb-icon">😊</text>
+      <text class="tb-label">心情</text>
+    </view>
+  </view>
+
+  <!-- Settings -->
+  <view class="create-settings">
+    <view class="setting-item">
+      <view class="si-left">
+        <text class="si-icon">🌐</text>
+        <view class="si-text">
+          <text class="si-title">可见范围</text>
+          <text class="si-desc">所有人可见</text>
+        </view>
+      </view>
+      <text class="si-arrow">›</text>
+    </view>
+    <view class="setting-item">
+      <view class="si-left">
+        <text class="si-icon">💬</text>
+        <view class="si-text">
+          <text class="si-title">允许评论</text>
+          <text class="si-desc">其他用户可以互动</text>
+        </view>
+      </view>
+      <switch class="si-switch" checked="{{allowComments}}" bindchange="onToggleComments" color="#4F46E5" />
+    </view>
+  </view>
+</view>

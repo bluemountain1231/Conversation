@@ -1,0 +1,19 @@
+<view class="container">
+  <view wx:if="{{posts.length > 0}}">
+    <post-card
+      wx:for="{{posts}}"
+      wx:key="id"
+      post="{{item}}"
+      bind:tap="onPostTap"
+      bind:like="onPostLike"
+      bind:favorite="onPostFavorite"
+    />
+  </view>
+
+  <view wx:else class="empty">
+    <text class="empty-icon">☆</text>
+    <text class="empty-text">还没有收藏内容</text>
+  </view>
+
+  <view wx:if="{{loading && posts.length > 0}}" class="loading-more">加载中...</view>
+</view>

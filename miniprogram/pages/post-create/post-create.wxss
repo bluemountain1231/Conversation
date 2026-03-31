@@ -1,0 +1,354 @@
+.create-page {
+  min-height: 100vh;
+  background: #f9f9fe;
+}
+
+.create-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24rpx;
+  background: rgba(249, 249, 254, 0.8);
+  -webkit-backdrop-filter: blur(40rpx);
+  backdrop-filter: blur(40rpx);
+  z-index: 100;
+}
+
+.ch-left {
+  width: 72rpx;
+  height: 72rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 36rpx;
+}
+
+.ch-left:active {
+  background: #f3f3f8;
+}
+
+.ch-close {
+  font-size: 36rpx;
+  color: #1a1c1f;
+}
+
+.ch-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #1a1c1f;
+  letter-spacing: -0.5rpx;
+}
+
+.ch-post-btn {
+  height: 64rpx;
+  padding: 0 40rpx;
+  border-radius: 32rpx;
+  background: #0058bc;
+  color: #FFFFFF;
+  font-size: 28rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.ch-post-btn:active {
+  transform: scale(0.95);
+  background: #0070eb;
+}
+
+.ch-post-disabled {
+  opacity: 0.35;
+}
+
+.header-spacer {
+  height: 88rpx;
+}
+
+.create-user-row {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 32rpx;
+  background: #f9f9fe;
+}
+
+.cu-avatar {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 50%;
+  background: #f3f3f8;
+  flex-shrink: 0;
+  margin-right: 20rpx;
+  border: 4rpx solid #FFFFFF;
+  box-shadow: 0 2rpx 8rpx rgba(26, 28, 31, 0.06);
+}
+
+.cu-avatar-ph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #0070eb, #0058bc);
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 700;
+  border: none;
+}
+
+.cu-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.cu-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #1a1c1f;
+}
+
+.cu-circle-picker {
+  display: flex;
+  align-items: center;
+  height: 64rpx;
+  padding: 0 24rpx;
+  border-radius: 32rpx;
+  background: #f3f3f8;
+  gap: 8rpx;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.cu-circle-picker:active {
+  background: #ededf2;
+}
+
+.cu-circle-icon {
+  font-size: 24rpx;
+  color: #0058bc;
+}
+
+.cu-circle-text {
+  font-size: 24rpx;
+  font-weight: 500;
+  color: #1a1c1f;
+  max-width: 180rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cu-circle-arrow {
+  font-size: 22rpx;
+  color: #414755;
+}
+
+.create-content {
+  padding: 24rpx 32rpx;
+  min-height: 300rpx;
+  background: #f9f9fe;
+}
+
+.create-textarea {
+  width: 100%;
+  min-height: 280rpx;
+  font-size: 36rpx;
+  color: #1a1c1f;
+  line-height: 1.7;
+  background: transparent;
+}
+
+.create-placeholder {
+  color: #c1c6d7;
+  font-size: 36rpx;
+}
+
+.create-images {
+  padding: 0 0 16rpx;
+}
+
+.img-scroll {
+  white-space: nowrap;
+}
+
+.img-scroll-inner {
+  display: inline-flex;
+  padding: 0 32rpx;
+  gap: 16rpx;
+}
+
+.img-item {
+  position: relative;
+  width: 240rpx;
+  height: 240rpx;
+  border-radius: 24rpx;
+  overflow: hidden;
+  flex-shrink: 0;
+  animation: imgPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes imgPop {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.img-preview { width: 100%; height: 100%; }
+
+.img-status {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(8rpx);
+}
+
+.img-error { background: rgba(186, 26, 26, 0.5); }
+.img-status-text { color: #fff; font-size: 22rpx; font-weight: 500; }
+
+.img-uploaded {
+  position: absolute; bottom: 8rpx; right: 8rpx;
+  width: 36rpx; height: 36rpx;
+  background: #10B981;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 20rpx; font-weight: 700;
+}
+
+.img-remove {
+  position: absolute; top: 8rpx; right: 8rpx;
+  width: 44rpx; height: 44rpx;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12rpx);
+  border-radius: 22rpx;
+  display: flex; align-items: center; justify-content: center;
+  color: #fff; font-size: 24rpx;
+}
+
+.img-remove:active { background: rgba(186, 26, 26, 0.6); }
+
+.img-add {
+  width: 240rpx;
+  height: 240rpx;
+  border-radius: 24rpx;
+  border: 3rpx dashed rgba(193, 198, 215, 0.3);
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  gap: 8rpx;
+  transition: all 0.2s;
+}
+
+.img-add:active {
+  border-color: rgba(0, 88, 188, 0.4);
+  background: rgba(0, 88, 188, 0.05);
+}
+
+.img-add-icon { font-size: 48rpx; color: #0058bc; }
+.img-add-text {
+  font-size: 18rpx;
+  color: #0058bc;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+}
+
+/* Toolbar */
+.create-toolbar {
+  display: flex;
+  margin: 20rpx 24rpx;
+  padding: 4rpx;
+  background: #f3f3f8;
+  border-radius: 32rpx;
+}
+
+.tb-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6rpx;
+  padding: 16rpx 0;
+  border-radius: 28rpx;
+  transition: background 0.2s;
+}
+
+.tb-item:active {
+  background: #e2e2e7;
+}
+
+.tb-icon { font-size: 40rpx; color: #0058bc; }
+
+.tb-label {
+  font-size: 18rpx;
+  color: #626267;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+  opacity: 0.6;
+}
+
+/* Settings */
+.create-settings {
+  padding: 16rpx 24rpx;
+}
+
+.setting-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 24rpx;
+  background: #FFFFFF;
+  border-radius: 24rpx;
+  margin-bottom: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(26, 28, 31, 0.03);
+  border: 1rpx solid rgba(193, 198, 215, 0.05);
+}
+
+.si-left {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  flex: 1;
+}
+
+.si-icon {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 18rpx;
+  background: #e0dfe4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  color: #626267;
+}
+
+.si-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.si-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #1a1c1f;
+}
+
+.si-desc {
+  font-size: 22rpx;
+  color: #414755;
+}
+
+.si-arrow {
+  font-size: 32rpx;
+  color: #414755;
+}
+
+.si-switch {
+  transform: scale(0.85);
+}

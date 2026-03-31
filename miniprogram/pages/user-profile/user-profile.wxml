@@ -1,0 +1,86 @@
+<view class="page-user-profile">
+  <!-- Loading -->
+  <view wx:if="{{userLoading && !user}}" class="empty">
+    <text class="empty-icon">⏳</text>
+    <text class="empty-text">加载中...</text>
+  </view>
+
+  <!-- Error -->
+  <view wx:elif="{{error && !user}}" class="empty">
+    <text class="empty-icon">⚠️</text>
+    <text class="empty-text">加载失败，下拉刷新重试</text>
+  </view>
+
+  <block wx:elif="{{user}}">
+    <!-- Profile header -->
+    <view class="profile-header">
+      <view class="header-bg"></view>
+      <view class="profile-content">
+        <view class="avatar-wrap">
+          <image wx:if="{{user.avatarUrl}}" class="profile-avatar" src="{{user.avatarUrl}}" mode="aspectFill" />
+          <view wx:else class="profile-avatar avatar-placeholder">{{user.username ? user.username[0] : '?'}}</view>
+        </view>
+        <text class="username text-bold text-xl">{{user.username || user.name || '用户'}}</text>
+        <text wx:if="{{user.bio}}" class="bio text-secondary">{{user.bio}}</text>
+        <text wx:if="{{!user.bio}}" class="bio text-light">这个人很懒，什么都没写~</text>
+      </view>
+    </view>
+
+    <!-- Stats card -->
+    <view class="stats-card card">
+      <view class="stat-item">
+        <text class="stat-num text-bold">{{stats.postCount || 0}}</text>
+        <text class="stat-label text-secondary text-sm">帖子</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-num text-bold">{{stats.followerCount || 0}}</text>
+        <text class="stat-label text-secondary text-sm">粉丝</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-num text-bold">{{stats.followingCount || 0}}</text>
+        <text class="stat-label text-secondary text-sm">关注</text>
+      </view>
+    </view>
+
+    <!-- Follow button -->
+    <view wx:if="{{!isSelf}}" class="follow-btn-wrap">
+      <button
+        wx:if="{{user.followed}}"
+        class="btn btn-follow-outline btn-block"
+        bindtap="onFollow"
+        disabled="{{followLoading}}"
+      >{{followLoading ? '处理中...' : '已关注'}}</button>
+      <button
+        wx:else
+        class="btn btn-primary btn-block"
+        bindtap="onFollow"
+        disabled="{{followLoading}}"
+      >{{followLoading ? '处理中...' : '关注'}}</button>
+    </view>
+
+    <view class="divider"></view>
+
+    <!-- Posts -->
+    <view class="posts-section">
+      <view class="section-header flex items-center justify-between">
+        <text class="section-title">TA的帖子</text>
+        <text class="text-light text-sm">{{stats.postCount || 0}}条</text>
+      </view>
+
+      <view wx:if="{{posts.length === 0 && !loading}}" class="empty">
+        <text class="empty-icon">📝</text>
+        <text class="empty-text">该用户还没有发帖</text>
+      </view>
+
+      <block wx:else>
+        <block wx:for="{{posts}}" wx:key="id">
+          <post-card post="{{item}}" bind:tap="onPostTap" bind:like="onLike" bind:favorite="onFavorite" />
+        </block>
+        <view wx:if="{{loading}}" class="loading-more">加载中...</view>
+        <view wx:elif="{{!hasMore && posts.length > 0}}" class="loading-more">没有更多了</view>
+      </block>
+    </view>
+  </block>
+</view>

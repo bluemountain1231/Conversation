@@ -1,0 +1,79 @@
+<view class="page-home">
+  <!-- Search bar -->
+  <view class="home-search" bindtap="onSearch">
+    <view class="search-box">
+      <text class="search-icon">🔍</text>
+      <text class="search-placeholder">搜索内容</text>
+    </view>
+  </view>
+
+  <!-- Story circles -->
+  <scroll-view
+    scroll-x
+    class="stories-scroll"
+    enhanced
+    show-scrollbar="{{false}}"
+  >
+    <view class="stories-inner">
+      <view wx:if="{{isLoggedIn}}" class="story-item" bindtap="onCreatePost">
+        <view class="story-ring story-you">
+          <image wx:if="{{userAvatar}}" class="story-avatar" src="{{userAvatar}}" mode="aspectFill" />
+          <view wx:else class="story-avatar story-avatar-ph">
+            <text class="story-add-icon">+</text>
+          </view>
+        </view>
+        <text class="story-name">你</text>
+      </view>
+      <view
+        wx:for="{{hotCircles}}"
+        wx:key="id"
+        class="story-item"
+        data-id="{{item.id}}"
+        bindtap="onStoryTap"
+      >
+        <view class="story-ring">
+          <image
+            wx:if="{{item.avatarUrl}}"
+            class="story-avatar"
+            src="{{item.avatarUrl}}"
+            mode="aspectFill"
+          />
+          <view wx:else class="story-avatar story-avatar-ph">
+            <text>{{item.name[0] || '◎'}}</text>
+          </view>
+        </view>
+        <text class="story-name ellipsis">{{item.name}}</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- Feed divider -->
+  <view wx:if="{{hotCircles.length}}" class="home-divider"></view>
+
+  <!-- Feed list -->
+  <view class="feed-list">
+    <post-card
+      wx:for="{{posts}}"
+      wx:key="id"
+      post="{{item}}"
+      bind:tap="onPostTap"
+      bind:like="onLike"
+      bind:favorite="onFavorite"
+    />
+
+    <view wx:if="{{loading && posts.length}}" class="feed-loading">
+      <view class="dot-loader">
+        <view></view><view></view><view></view>
+      </view>
+    </view>
+
+    <view wx:if="{{!hasMore && posts.length}}" class="feed-end">没有更多了</view>
+
+    <view wx:if="{{!loading && !posts.length}}" class="feed-empty">
+      <text class="fe-icon">📝</text>
+      <text class="fe-title">暂无内容</text>
+      <text class="fe-hint">发布第一条帖子，分享你的想法</text>
+      <view class="btn btn-primary btn-pill mt-lg" bindtap="onCreatePost">发布</view>
+    </view>
+  </view>
+</view>

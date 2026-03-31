@@ -1,0 +1,54 @@
+<view class="tab-bar">
+  <view
+    class="tab-item {{selected === 0 ? 'tab-active' : ''}}"
+    bindtap="switchTab"
+    data-index="0"
+  >
+    <view class="tab-icon-wrap">
+      <text class="tab-icon">⌂</text>
+    </view>
+    <text class="tab-label">首页</text>
+  </view>
+
+  <view
+    class="tab-item {{selected === 1 ? 'tab-active' : ''}}"
+    bindtap="switchTab"
+    data-index="1"
+  >
+    <view class="tab-icon-wrap">
+      <text class="tab-icon">✦</text>
+    </view>
+    <text class="tab-label">发现</text>
+  </view>
+
+  <view class="tab-center" bindtap="onCreatePost">
+    <view class="tab-center-btn">
+      <text class="tab-center-icon">+</text>
+    </view>
+  </view>
+
+  <view
+    class="tab-item {{selected === 2 ? 'tab-active' : ''}}"
+    bindtap="switchTab"
+    data-index="2"
+  >
+    <view class="tab-icon-wrap">
+      <text class="tab-icon">🔔</text>
+      <view wx:if="{{list[2].badge > 0}}" class="tab-badge">
+        {{list[2].badge > 99 ? '99+' : list[2].badge}}
+      </view>
+    </view>
+    <text class="tab-label">消息</text>
+  </view>
+
+  <view
+    class="tab-item {{selected === 3 ? 'tab-active' : ''}}"
+    bindtap="switchTab"
+    data-index="3"
+  >
+    <view class="tab-icon-wrap">
+      <text class="tab-icon">👤</text>
+    </view>
+    <text class="tab-label">我的</text>
+  </view>
+</view>

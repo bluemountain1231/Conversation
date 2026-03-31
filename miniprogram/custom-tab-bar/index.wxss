@@ -1,0 +1,115 @@
+.tab-bar {
+  display: flex;
+  align-items: flex-end;
+  height: 120rpx;
+  background: rgba(249, 249, 254, 0.8);
+  -webkit-backdrop-filter: blur(40rpx);
+  backdrop-filter: blur(40rpx);
+  padding-bottom: env(safe-area-inset-bottom);
+  position: relative;
+  box-shadow: 0 -4rpx 24rpx rgba(0, 0, 0, 0.04);
+  border-radius: 32rpx 32rpx 0 0;
+}
+
+.tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 120rpx;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.tab-item:active {
+  transform: scale(0.9);
+}
+
+.tab-icon-wrap {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 4rpx;
+  position: relative;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.tab-active .tab-icon-wrap {
+  transform: scale(1.1);
+}
+
+.tab-icon {
+  font-size: 40rpx;
+  line-height: 1;
+  color: #717786;
+  transition: all 0.25s ease;
+}
+
+.tab-active .tab-icon {
+  color: #0058bc;
+}
+
+.tab-label {
+  font-size: 20rpx;
+  color: #717786;
+  font-weight: 500;
+  letter-spacing: 0.5rpx;
+  transition: all 0.25s ease;
+}
+
+.tab-active .tab-label {
+  color: #0058bc;
+  font-weight: 600;
+}
+
+.tab-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 120rpx;
+}
+
+.tab-center-btn {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 48rpx;
+  background: linear-gradient(135deg, #0058bc 0%, #0070eb 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12rpx 40rpx rgba(0, 88, 188, 0.35);
+  margin-bottom: 20rpx;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.tab-center:active .tab-center-btn {
+  transform: scale(0.88);
+  box-shadow: 0 4rpx 16rpx rgba(0, 88, 188, 0.2);
+}
+
+.tab-center-icon {
+  font-size: 52rpx;
+  color: #FFFFFF;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.tab-badge {
+  position: absolute;
+  top: -6rpx;
+  right: -16rpx;
+  min-width: 32rpx;
+  height: 32rpx;
+  line-height: 32rpx;
+  text-align: center;
+  font-size: 18rpx;
+  font-weight: 600;
+  color: #fff;
+  background: #ba1a1a;
+  border-radius: 16rpx;
+  padding: 0 8rpx;
+}

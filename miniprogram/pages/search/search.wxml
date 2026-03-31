@@ -1,0 +1,157 @@
+<view class="page-search">
+  <!-- Search bar -->
+  <view class="search-bar">
+    <view class="search-input-wrap flex items-center">
+      <text class="search-icon">🔍</text>
+      <input
+        class="search-input flex-1"
+        placeholder="搜索帖子、圈子、用户"
+        placeholder-class="search-placeholder"
+        value="{{keyword}}"
+        focus="{{autoFocus}}"
+        confirm-type="search"
+        bindinput="onInput"
+        bindconfirm="onConfirm"
+      />
+      <view wx:if="{{keyword}}" class="clear-btn" bindtap="onClear">✕</view>
+    </view>
+  </view>
+
+  <!-- Tabs -->
+  <view class="tab-bar flex">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="key"
+      class="tab-item {{activeTab === item.key ? 'active' : ''}}"
+      data-tab="{{item.key}}"
+      bindtap="onTabChange"
+    >{{item.label}}</view>
+  </view>
+
+  <!-- Initial state (before search) -->
+  <view wx:if="{{!searched}}" class="initial-state">
+    <view class="hot-keywords-section" wx:if="{{hotKeywords.length > 0}}">
+      <text class="hot-title">热门搜索</text>
+      <view class="hot-list flex flex-wrap">
+        <view
+          wx:for="{{hotKeywords}}"
+          wx:key="*this"
+          class="hot-tag tag"
+          data-keyword="{{item}}"
+          bindtap="onHotKeywordTap"
+        >{{item}}</view>
+      </view>
+    </view>
+    <view class="empty-state">
+      <text class="empty-icon">🔍</text>
+      <text class="empty-text">输入关键词开始搜索</text>
+    </view>
+  </view>
+
+  <!-- Search results -->
+  <view wx:elif="{{searched}}" class="results-area">
+
+    <!-- ====== ALL tab ====== -->
+    <block wx:if="{{activeTab === 'all'}}">
+      <!-- Posts section -->
+      <view wx:if="{{results.posts.content.length > 0}}" class="result-section">
+        <view class="section-header flex items-center justify-between">
+          <text class="section-title">帖子</text>
+          <text wx:if="{{results.posts.totalElements > 3}}" class="view-more text-primary text-sm" data-tab="post" bindtap="onViewMore">查看更多 ></text>
+        </view>
+        <block wx:for="{{results.posts.content}}" wx:key="id" wx:if="{{index < 3}}">
+          <post-card post="{{item}}" bind:tap="onPostTap" bind:like="onLike" bind:favorite="onFavorite" />
+        </block>
+      </view>
+
+      <!-- Circles section -->
+      <view wx:if="{{results.circles.content.length > 0}}" class="result-section">
+        <view class="section-header flex items-center justify-between">
+          <text class="section-title">圈子</text>
+          <text wx:if="{{results.circles.totalElements > 3}}" class="view-more text-primary text-sm" data-tab="circle" bindtap="onViewMore">查看更多 ></text>
+        </view>
+        <block wx:for="{{results.circles.content}}" wx:key="id" wx:if="{{index < 3}}">
+          <circle-card circle="{{item}}" bind:tap="onCircleTap" />
+        </block>
+      </view>
+
+      <!-- Users section -->
+      <view wx:if="{{results.users.content.length > 0}}" class="result-section">
+        <view class="section-header flex items-center justify-between">
+          <text class="section-title">用户</text>
+          <text wx:if="{{results.users.totalElements > 3}}" class="view-more text-primary text-sm" data-tab="user" bindtap="onViewMore">查看更多 ></text>
+        </view>
+        <block wx:for="{{results.users.content}}" wx:key="id" wx:if="{{index < 3}}">
+          <view class="user-card card flex items-center" data-user="{{item}}" bindtap="onUserTap">
+            <view class="user-avatar-wrap">
+              <image wx:if="{{item.avatarUrl}}" class="user-avatar" src="{{item.avatarUrl}}" mode="aspectFill" />
+              <view wx:else class="user-avatar avatar-placeholder">{{item.username ? item.username[0] : '?'}}</view>
+            </view>
+            <view class="user-info flex-1">
+              <text class="user-name">{{item.username || item.name || '用户'}}</text>
+              <text wx:if="{{item.bio}}" class="user-bio text-secondary text-sm ellipsis">{{item.bio}}</text>
+            </view>
+            <button class="btn btn-sm {{item.followed ? 'btn-outline' : 'btn-primary'}}" catchtap="onFollowUser" data-user="{{item}}">
+              {{item.followed ? '已关注' : '关注'}}
+            </button>
+          </view>
+        </block>
+      </view>
+
+      <!-- All empty -->
+      <view wx:if="{{!loading && results.posts.content.length === 0 && results.circles.content.length === 0 && results.users.content.length === 0}}" class="empty">
+        <text class="empty-icon">😕</text>
+        <text class="empty-text">没有找到相关内容</text>
+      </view>
+    </block>
+
+    <!-- ====== POST tab ====== -->
+    <block wx:if="{{activeTab === 'post'}}">
+      <block wx:for="{{results.posts.content}}" wx:key="id">
+        <post-card post="{{item}}" bind:tap="onPostTap" bind:like="onLike" bind:favorite="onFavorite" />
+      </block>
+      <view wx:if="{{!loading && results.posts.content.length === 0}}" class="empty">
+        <text class="empty-icon">😕</text>
+        <text class="empty-text">没有找到相关帖子</text>
+      </view>
+    </block>
+
+    <!-- ====== CIRCLE tab ====== -->
+    <block wx:if="{{activeTab === 'circle'}}">
+      <block wx:for="{{results.circles.content}}" wx:key="id">
+        <circle-card circle="{{item}}" bind:tap="onCircleTap" />
+      </block>
+      <view wx:if="{{!loading && results.circles.content.length === 0}}" class="empty">
+        <text class="empty-icon">😕</text>
+        <text class="empty-text">没有找到相关圈子</text>
+      </view>
+    </block>
+
+    <!-- ====== USER tab ====== -->
+    <block wx:if="{{activeTab === 'user'}}">
+      <block wx:for="{{results.users.content}}" wx:key="id">
+        <view class="user-card card flex items-center" data-user="{{item}}" bindtap="onUserTap">
+          <view class="user-avatar-wrap">
+            <image wx:if="{{item.avatarUrl}}" class="user-avatar" src="{{item.avatarUrl}}" mode="aspectFill" />
+            <view wx:else class="user-avatar avatar-placeholder">{{item.username ? item.username[0] : '?'}}</view>
+          </view>
+          <view class="user-info flex-1">
+            <text class="user-name">{{item.username || item.name || '用户'}}</text>
+            <text wx:if="{{item.bio}}" class="user-bio text-secondary text-sm ellipsis">{{item.bio}}</text>
+          </view>
+          <button class="btn btn-sm {{item.followed ? 'btn-outline' : 'btn-primary'}}" catchtap="onFollowUser" data-user="{{item}}">
+            {{item.followed ? '已关注' : '关注'}}
+          </button>
+        </view>
+      </block>
+      <view wx:if="{{!loading && results.users.content.length === 0}}" class="empty">
+        <text class="empty-icon">😕</text>
+        <text class="empty-text">没有找到相关用户</text>
+      </view>
+    </block>
+
+    <!-- Loading / End -->
+    <view wx:if="{{loading}}" class="loading-more">加载中...</view>
+    <view wx:elif="{{!hasMore && activeTab !== 'all' && (results.posts.content.length > 0 || results.circles.content.length > 0 || results.users.content.length > 0)}}" class="loading-more">没有更多了</view>
+  </view>
+</view>

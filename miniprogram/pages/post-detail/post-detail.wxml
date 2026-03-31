@@ -1,0 +1,130 @@
+<view class="detail-page" wx:if="{{!loading && post}}">
+  <!-- Author Header -->
+  <view class="post-header card">
+    <view class="author-row flex items-center">
+      <view class="author-tappable flex items-center flex-1" bindtap="onAuthorTap">
+        <image wx:if="{{post.authorAvatarUrl}}" class="avatar" src="{{post.authorAvatarUrl}}" mode="aspectFill" />
+        <view wx:else class="avatar avatar-placeholder">{{post.authorName ? post.authorName[0] : '?'}}</view>
+        <view class="author-info flex-1 ml-md">
+          <text class="author-name text-bold">{{post.authorName || '匿名用户'}}</text>
+          <text class="post-time text-sm text-secondary">{{post.displayTime}}</text>
+        </view>
+      </view>
+      <view class="follow-btn-wrap" wx:if="{{post.authorId !== currentUserId}}">
+        <view class="btn btn-sm {{post.authorFollowed ? 'btn-outline' : 'btn-primary'}}" catchtap="onFollowAuthor">
+          <text>{{post.authorFollowed ? '已关注' : '+ 关注'}}</text>
+        </view>
+      </view>
+      <view class="more-btn" catchtap="onMoreAction" wx:if="{{post.authorId === currentUserId}}">
+        <text class="more-icon">···</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Post Content -->
+  <view class="post-content card">
+    <text class="post-title">{{post.title}}</text>
+
+    <view class="content-body mt-md">
+      <rich-text nodes="{{post.content}}" class="rich-content"></rich-text>
+    </view>
+
+    <!-- Images -->
+    <view class="image-gallery mt-md" wx:if="{{post.processedImages.length > 0}}">
+      <view
+        class="gallery-item {{post.processedImages.length === 1 ? 'single' : ''}}"
+        wx:for="{{post.processedImages}}"
+        wx:key="index"
+        bindtap="onImageTap"
+        data-index="{{index}}"
+      >
+        <image src="{{item}}" mode="{{post.processedImages.length === 1 ? 'widthFix' : 'aspectFill'}}" class="gallery-image" />
+      </view>
+    </view>
+
+    <!-- Circle Tag -->
+    <view class="circle-tag-wrap mt-md" wx:if="{{post.circleName}}">
+      <view class="tag" bindtap="onCircleTap">📌 {{post.circleName}}</view>
+    </view>
+  </view>
+
+  <!-- Action Bar -->
+  <view class="action-bar card">
+    <view class="action-item {{post.liked ? 'active' : ''}}" bindtap="onLike">
+      <text class="action-icon">{{post.liked ? '♥' : '♡'}}</text>
+      <text class="action-count">{{post.displayLikeCount}}</text>
+    </view>
+    <view class="action-item {{post.favorited ? 'active' : ''}}" bindtap="onFavorite">
+      <text class="action-icon">{{post.favorited ? '★' : '☆'}}</text>
+      <text class="action-count">{{post.displayFavoriteCount}}</text>
+    </view>
+    <view class="action-item">
+      <text class="action-icon">💬</text>
+      <text class="action-count">{{post.displayCommentCount}}</text>
+    </view>
+    <button class="action-item action-share" open-type="share">
+      <text class="action-icon">↗</text>
+      <text class="action-count">分享</text>
+    </button>
+  </view>
+
+  <!-- Comments Section -->
+  <view class="comments-section">
+    <view class="section-header">
+      <text class="section-title text-bold">评论 ({{post.commentCount || 0}})</text>
+    </view>
+
+    <view wx:if="{{comments.length > 0}}">
+      <view class="comment-card card" wx:for="{{comments}}" wx:key="id">
+        <comment-item comment="{{item}}" bind:reply="onReply" />
+      </view>
+    </view>
+
+    <view class="empty" wx:elif="{{!loading}}">
+      <text class="empty-icon">💬</text>
+      <text class="empty-text">暂无评论，快来抢沙发</text>
+    </view>
+  </view>
+
+  <!-- Bottom spacer for fixed input -->
+  <view class="bottom-spacer"></view>
+
+  <!-- Fixed Comment Input -->
+  <view class="comment-input-bar safe-bottom">
+    <view class="reply-hint flex items-center justify-between" wx:if="{{replyTo}}">
+      <text class="text-sm text-secondary">回复 @{{replyTo.name}}</text>
+      <text class="cancel-reply text-sm text-primary" catchtap="cancelReply">取消</text>
+    </view>
+    <view class="input-row flex items-center">
+      <input
+        class="comment-input flex-1"
+        placeholder="{{replyTo ? '回复 @' + replyTo.name + '...' : '写评论...'}}"
+        placeholder-class="comment-placeholder"
+        value="{{commentText}}"
+        bindinput="onCommentInput"
+        bindfocus="onCommentFocus"
+        bindblur="onCommentBlur"
+        confirm-type="send"
+        bindconfirm="sendComment"
+        focus="{{inputFocus}}"
+        maxlength="500"
+      />
+      <view
+        class="send-btn {{commentText.trim() ? 'send-btn-active' : ''}}"
+        bindtap="sendComment"
+      >
+        <text>发送</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- Loading State -->
+<view class="loading-state" wx:if="{{loading}}">
+  <view class="loading-skeleton">
+    <view class="skeleton-header"></view>
+    <view class="skeleton-title"></view>
+    <view class="skeleton-line"></view>
+    <view class="skeleton-line short"></view>
+  </view>
+</view>

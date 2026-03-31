@@ -33,7 +33,7 @@
 
 ## 项目环境部署流程
 
-以下顺序适用于**全新机器**或**新服务器**从零部署；路径以仓库根目录 `interest-circle/` 为准。
+以下顺序适用于**全新机器**或**新服务器**从零部署；路径以仓库根目录 `interest-circle/` 为准。命令默认在 **Linux / macOS（bash）** 下执行；**Windows 桌面开发请看下文「Windows 环境部署流程」**。
 
 ### 1. 安装基础软件
 
@@ -162,6 +162,128 @@ npm run build
 ```
 
 将 `dist/` 交给 Nginx、OSS 或任意静态资源服务；配置反向代理将 `/api`、`/uploads`、`/ws` 指到后端地址。
+
+---
+
+## Windows 环境部署流程
+
+在 **Windows 10/11** 上本地开发与运行的推荐顺序。若使用 **WSL2**，可直接按上文 Linux 流程在 WSL 终端中操作。
+
+### 1. 安装运行环境
+
+任选其一安装（需把各软件的 `bin` 目录加入 **系统环境变量 Path**，新开终端后生效）：
+
+| 软件 | 建议方式 |
+|------|----------|
+| **JDK 17** | [Eclipse Temurin 17](https://adoptium.net/) 或 Oracle JDK 17 安装包 |
+| **Maven** | [Apache Maven](https://maven.apache.org/download.cgi) 解压后配置 `MAVEN_HOME` 与 Path |
+| **Node.js** | [Node.js LTS](https://nodejs.org/) 安装包（需 ≥ 18） |
+| **MySQL 8** | [MySQL Community Server](https://dev.mysql.com/downloads/mysql/) 安装向导，记住 root 密码 |
+
+也可用 **winget**（管理员 PowerShell 示例，版本以实际为准）：
+
+```powershell
+winget install EclipseAdoptium.Temurin.17.JDK
+winget install Apache.Maven
+winget install OpenJS.NodeJS.LTS
+winget install Oracle.MySQL
+```
+
+在 **命令提示符（cmd）** 或 **PowerShell** 中确认：
+
+```text
+java -version
+mvn -v
+node -v
+mysql --version
+```
+
+### 2. 启动 MySQL 并创建数据库
+
+1. `Win + R` 输入 `services.msc`，找到 **MySQL** 或 **MySQL80**，确保状态为「正在运行」；或在**管理员**命令行执行：`net start MySQL80`（服务名以安装时为准）。
+2. 使用 **MySQL Command Line Client**、**MySQL Workbench** 或已加入 Path 的 `mysql` 登录 root，执行：
+
+```sql
+CREATE DATABASE IF NOT EXISTS interest_circle
+  DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+### 3. 获取代码与后端配置
+
+```powershell
+cd C:\Users\你的用户名\Projects
+git clone https://github.com/bluemountain1231/Conversation.git
+cd Conversation
+```
+
+若仓库中未提交 `application.yml`（仅提供模板），请复制并编辑：
+
+```powershell
+copy backend\src\main\resources\application.example.yml backend\src\main\resources\application.yml
+```
+
+用记事本或 VS Code 打开 `application.yml`，将 `spring.datasource.password` 等改为本机 MySQL 与 JWT、第三方密钥（说明见上文「配置后端」）。
+
+创建上传目录（在仓库根目录 `Conversation\` 下）：
+
+```powershell
+mkdir backend\uploads -Force
+```
+
+### 4. 启动后端
+
+```powershell
+cd backend
+mvn -q -DskipTests package
+mvn spring-boot:run
+```
+
+首次成功启动后，JPA 会在库中**自动建表**。保持该窗口运行。
+
+### 5. （可选）导入演示数据 `test-data.sql`
+
+前提：表已生成；且已存在 **用户 `id = 1`**（先在前端注册第一个账号），说明与 Linux 章节相同。
+
+在仓库根目录 `Conversation\` 下：
+
+**命令提示符（cmd）：**
+
+```cmd
+mysql -u root -p interest_circle < backend\test-data.sql
+```
+
+**PowerShell：**
+
+```powershell
+Get-Content -Raw backend\test-data.sql | mysql -u root -p interest_circle
+```
+
+### 6. 启动前端
+
+新开一个终端：
+
+```powershell
+cd Conversation\frontend
+npm install
+npm run dev
+```
+
+浏览器访问 **http://localhost:5173**。若后端为自带 HTTPS 的 `https://localhost:8080`，需在浏览器接受自签证书，且保持 `frontend\vite.config.js` 中 `proxy` 的 `target` 与后端一致。
+
+### 7. 生产构建（Windows 上打包前端）
+
+```powershell
+cd frontend
+npm run build
+```
+
+生成的 `frontend\dist\` 可拷贝到 Windows 上的 **IIS**、内网 Nginx（若已安装）或任意静态站点；API 仍由可部署在服务器或本机的 Spring Boot 提供。
+
+### 8. 常见问题
+
+- **找不到 `mvn` / `java` / `mysql`**：检查 Path 是否包含上述工具的 `bin` 目录，**重新打开**终端。
+- **8080 被占用**：在 `application.yml` 中修改 `server.port`，并同步修改前端代理地址。
+- **MySQL 连接失败**：确认服务已启动、防火墙允许本机连接、`application.yml` 中主机为 `localhost`、端口 `3306` 与安装一致。
 
 ---
 

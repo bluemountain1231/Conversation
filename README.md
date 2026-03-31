@@ -296,6 +296,49 @@ npm run build
 
 ---
 
+## 与远程仓库同步（Git）
+
+### 把本地修改推到 GitHub（更新远程）
+
+在仓库根目录执行：
+
+```bash
+git status                    # 查看变更
+git add -A                    # 或 git add 具体文件
+git commit -m "简要说明本次修改"
+git push origin main          # 推送到默认远程 main 分支
+```
+
+若当前分支已设置上游（`git push -u origin main` 过一次），之后可直接：
+
+```bash
+git push
+```
+
+**HTTPS 推送**时，GitHub 已不再支持账户密码，需在 [Personal Access Token](https://github.com/settings/tokens) 生成令牌，密码处粘贴该令牌。已配置 **SSH 密钥**时，将远程改为 SSH 后推送：
+
+```bash
+git remote set-url origin git@github.com:bluemountain1231/Conversation.git
+git push
+```
+
+### 把 GitHub 上的新提交拉到本地
+
+```bash
+git pull origin main
+```
+
+若本地也有未推送提交，可先 `git pull --rebase origin main` 再 `git push`，减少多余合并提交。
+
+### 更换远程仓库地址
+
+```bash
+git remote -v                 # 查看当前远程
+git remote set-url origin <新的仓库 URL>
+```
+
+---
+
 ## API 接口
 
 | 方法 | 路径 | 说明 | 鉴权 |
